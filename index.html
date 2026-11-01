@@ -43,10 +43,6 @@
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
           Sao Chép IOCs
         </button>
-        <button class="btn btn-accent" onclick="document.querySelector('[data-tab=\'presentation\']').click()">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-          Phòng Quay Video
-        </button>
         <button class="btn btn-secondary" onclick="window.print()">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
           In PDF
@@ -77,11 +73,6 @@
       <button class="tab-btn" data-tab="mitre">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
         Ma Trận MITRE ATT&CK
-      </button>
-      <button class="tab-btn" data-tab="presentation">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-        Kịch Bản Quay Video
-        <span class="badge-pill" style="background:#f43f5e; color:#fff;">Teleprompter</span>
       </button>
     </div>
   </nav>
@@ -1116,173 +1107,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </section>
-
-    <!-- ========================================================================
-         TAB 5: KỊCH BẢN QUAY VIDEO THUYẾT MINH (TELEPROMPTER STUDIO)
-         ======================================================================== -->
-    <section id="tab-presentation" class="tab-content">
-      
-      <!-- Studio Control Bar -->
-      <div class="studio-bar">
-        <div>
-          <h2 style="font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; gap: 10px;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-            Studio Thuyết Minh & Quay Video Báo Cáo
-          </h2>
-          <div style="font-size: 0.85rem; color: #94a3b8; margin-top: 4px;">
-            Hỗ trợ sinh viên <strong>Huỳnh Ngọc Hiếu</strong> quay video phân tích nộp bài chuẩn chỉnh từ 8 - 12 phút theo yêu cầu của Giảng viên.
-          </div>
-        </div>
-
-        <div class="stopwatch-box">
-          <div class="stopwatch-display" id="stopwatch-timer">00:00</div>
-          <div class="stopwatch-controls">
-            <button class="btn btn-primary" id="sw-start-btn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-              Bắt Đầu Quay
-            </button>
-            <button class="btn btn-secondary" id="sw-reset-btn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 2v6h6M21.5 22v-6h-6"/><path d="M22 11.5A10 10 0 0 0 3.2 7.2M2 12.5a10 10 0 0 0 18.8 4.2"/></svg>
-              Đặt Lại
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Presentation Segments Timeline -->
-      <div class="timeline-segments">
-        
-        <!-- Segment 1 -->
-        <div class="segment-card active-segment" id="seg-1">
-          <div class="segment-header">
-            <div class="segment-title">Phần 1: Mở Đầu & Lab 01-01 (Kỹ Thuật DLL Hijacking & Proxying)</div>
-            <span class="segment-time-badge">00:00 - 02:30 (150 giây)</span>
-          </div>
-
-          <div class="screen-action-box">
-            <div class="screen-action-title">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-              Thao tác trên màn hình (Screen Actions):
-            </div>
-            1. Mở IDA Pro hiển thị <code>Lab01-01.exe</code> tại hàm <code>_main</code> (<code>0x00401440</code>). Bấm <kbd>F5</kbd> để hiển thị mã giả Decompiler.<br>
-            2. Trỏ chuột vào chuỗi kiểm tra dòng lệnh <code>WARNING_THIS_WILL_DESTROY_YOUR_MACHINE</code> và hàm <code>CopyFileA</code>.<br>
-            3. Chuyển sang tab IDA Pro thứ hai mở <code>Lab01-01.dll</code>, chỉ vào <code>DllMain</code>, Mutex <code>SADFHUHF</code> và địa chỉ IP <code>127.26.152.13:80</code>.
-          </div>
-
-          <div class="teleprompter-script">
-            <p>"Chào thầy và các bạn, hôm nay em là <strong>Huỳnh Ngọc Hiếu</strong> xin phép trình bày báo cáo phân tích dịch ngược 4 bài lab trong Chương 1 sách Practical Malware Analysis, được thực hiện với công cụ IDA Pro kết hợp giao thức MCP và chuẩn hóa theo phương pháp luận REA."</p>
-            <p>"Đầu tiên là <strong>Lab 01-01</strong> gồm một cặp tệp: <code>Lab01-01.exe</code> và <code>Lab01-01.dll</code>. Tại hàm <code>_main</code>, mã độc kiểm tra tham số dòng lệnh an toàn mang tên <mark>WARNING_THIS_WILL_DESTROY_YOUR_MACHINE</mark>. Nếu không có tham số này, chương trình sẽ lập tức thoát để phòng ngừa chạy vô tình và qua mặt các sandbox tự động."</p>
-            <p>"Khi chạy với đúng cờ lệnh, chương trình không ghi đè trực tiếp mà sử dụng kỹ thuật <strong>DLL Proxying</strong>: nó ánh xạ <code>Kernel32.dll</code> thật vào bộ nhớ, cấu hình danh sách hàm xuất ủy nhiệm sang <code>Lab01-01.dll</code>, sau đó sao chép DLL độc vào thư mục <code>C:\windows\system32\kerne132.dll</code>. Điểm tinh vi ở đây là kỹ thuật <mark>Typosquatting</mark> ngụy trang chữ 'l' thành số '1'."</p>
-            <p>"Tiếp theo, hàm <code>sub_4010A0</code> duyệt đệ quy toàn bộ ổ đĩa <code>C:\*</code>, quét tìm các file <code>.exe</code> và chỉnh sửa trực tiếp bảng Import (IAT) từ <code>kernel32.dll</code> thành <code>kerne132.dll</code>. Do đó, bất kỳ ứng dụng nào khởi chạy về sau đều sẽ vô tình nạp DLL độc hại."</p>
-            <p>"Khi mở <code>Lab01-01.dll</code> tại <code>DllMain</code>, ta thấy mã độc tạo Mutex <code>SADFHUHF</code> để chống chạy trùng, kết nối socket tới C2 IP <mark>127.26.152.13:80</mark>, gửi tín hiệu beacon <code>hello</code> và lắng nghe lệnh điều khiển <code>exec</code> để kích hoạt dòng lệnh ngầm hoặc <code>sleep</code> để trì hoãn."</p>
-          </div>
-        </div>
-
-        <!-- Segment 2 -->
-        <div class="segment-card" id="seg-2">
-          <div class="segment-header">
-            <div class="segment-title">Phần 2: Lab 01-02 (Kỹ Thuật Đóng Gói UPX & Mã Độc DDoS Hẹn Giờ)</div>
-            <span class="segment-time-badge">02:30 - 05:00 (150 giây)</span>
-          </div>
-
-          <div class="screen-action-box">
-            <div class="screen-action-title">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-              Thao tác trên màn hình (Screen Actions):
-            </div>
-            1. Mở <code>Lab01-02.exe</code> nguyên bản trong IDA: chỉ ra phân đoạn <code>UPX0</code> có kích thước ảo 16KB nhưng dung lượng thô bằng 0.<br>
-            2. Mở cửa sổ Terminal, gõ lệnh giải nén: <code>upx -d Lab01-02.exe -o Lab01-02_unpacked.exe</code>.<br>
-            3. Mở file unpacked trong IDA, nhấn <kbd>F5</kbd> tại <code>sub_401040</code>, làm nổi bật cấu trúc <code>SystemTime.wYear = 2100</code> và vòng lặp 20 luồng tại <code>StartAddress</code>.
-          </div>
-
-          <div class="teleprompter-script">
-            <p>"Bước sang <strong>Lab 01-02</strong>, tệp tin nhị phân ban đầu chỉ có kích thước vỏn vẹn <mark>3,072 bytes</mark>. Khi quan sát cấu trúc PE, ta phát hiện ngay các phân đoạn đặc trưng <code>UPX0</code>, <code>UPX1</code> và bảng Import bị rút gọn chỉ còn 9 hàm API tự nạp. Đây là dấu hiệu nhận biết mẫu bị đóng gói bởi <mark>UPX 3.04</mark>."</p>
-            <p>"Sau khi chạy lệnh <code>upx -d</code> để giải nén, dung lượng tệp phình lên 16,384 bytes và toàn bộ các API quan trọng của <code>ADVAPI32.dll</code> và <code>WININET.dll</code> được phục hồi hoàn chỉnh."</p>
-            <p>"Phân tích hàm <code>_main</code> và <code>sub_401040</code>, mã độc kiểm tra Mutex <code>HGL345</code> rồi gọi <code>CreateServiceA</code> để tự cài đặt một Windows Service tên là <mark>MalService</mark> với cờ <code>SERVICE_AUTO_START</code> nhằm duy trì sự tồn tại bền vững qua các lần khởi động lại máy tính."</p>
-            <p>"Điểm độc đáo nhất ở mẫu này là cơ chế <strong>Time-bomb (Bom hẹn giờ)</strong>: hàm <code>SetWaitableTimer</code> thiết lập mốc thời gian kích hoạt đến tận <mark>năm 2100</mark> và chờ đợi bằng <code>WaitForSingleObject</code>. Kỹ thuật này giúp mã độc ngủ đông hàng chục năm để đánh lừa các sandbox phân tích động vốn chỉ chạy trong vài phút."</p>
-            <p>"Khi thời điểm đến, chương trình tạo đồng thời <strong>20 luồng độc lập</strong>. Mỗi luồng chạy một vòng lặp vô tận gửi HTTP GET requests tới <code>http://www.malwareanalysisbook.com</code> với User-Agent giả mạo <code>Internet Explorer 8.0</code> nhằm làm sập máy chủ mục tiêu - đây chính là một HTTP DoS Botnet."</p>
-          </div>
-        </div>
-
-        <!-- Segment 3 -->
-        <div class="segment-card" id="seg-3">
-          <div class="segment-header">
-            <div class="segment-title">Phần 3: Lab 01-03 (Phân Tích Packer FSG & Ranh Giới Phân Tích Tĩnh)</div>
-            <span class="segment-time-badge">05:00 - 07:30 (150 giây)</span>
-          </div>
-
-          <div class="screen-action-box">
-            <div class="screen-action-title">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-              Thao tác trên màn hình (Screen Actions):
-            </div>
-            1. Mở <code>Lab01-03.exe</code> trong IDA Pro, chuyển qua tab Imports chỉ ra đúng 2 hàm: <code>LoadLibraryA</code> và <code>GetProcAddress</code>.<br>
-            2. Chỉ vào Timestamp của Header bị làm giả về mốc Unix Epoch 0 (năm 1970).<br>
-            3. Mở mã hợp ngữ tại <code>start</code> (<code>0x00405000</code>), giải thích stub nén aPLib và lệnh nhảy <code>jmp 0x00401090</code>.
-          </div>
-
-          <div class="teleprompter-script">
-            <p>"Tiếp theo là <strong>Lab 01-03</strong>. Đây là một bài học kinh điển về tệp bị đóng gói bởi packer tùy biến phức tạp hơn: <mark>FSG 1.0 (Fast Small Good)</mark>."</p>
-            <p>"Ngay từ cái nhìn đầu tiên trên IDA, ta nhận thấy các chỉ số bất thường: Compile Timestamp bị làm sai lệch về <mark>ngày 01/01/1970</mark> (Unix Epoch 0). Bảng phân đoạn bị xáo trộn thành <code>seg000</code>, <code>seg001</code>, <code>seg002</code> thay vì các section chuẩn. Đặc biệt, bảng Imports chỉ còn đúng hai API duy nhất là <code>LoadLibraryA</code> và <code>GetProcAddress</code>, và ta không thể tìm thấy bất kỳ chuỗi ký tự có nghĩa nào trong không gian tệp tĩnh."</p>
-            <p>"Đi sâu vào mã hợp ngữ tại Entry Point <code>0x00405000</code>, ta thấy đây là đoạn stub giải nén sử dụng thuật toán aPLib. Stub này thực hiện giải mã trực tiếp luồng byte vào vùng địa chỉ ảo <code>0x00401000</code>, tự dò tìm tên DLL để tái tạo lại IAT trong RAM, và kết thúc bằng một lệnh nhảy xa <mark>jmp 0x00401090</mark> để chuyển giao quyền thực thi cho Original Entry Point (OEP)."</p>
-            <p>"Theo chuẩn phương pháp luận REA, Lab 01-03 đại diện cho ranh giới giới hạn của phân tích tĩnh đơn thuần: khi gặp packer tùy biến không thể unpack tự động bằng công cụ dòng lệnh, chuyên viên phân tích bắt buộc phải chuyển sang kỹ thuật phân tích động (Dynamic Analysis) với debugger (như x64dbg) để bẫy điểm dừng tại OEP và dump bộ nhớ qua Scylla."</p>
-          </div>
-        </div>
-
-        <!-- Segment 4 -->
-        <div class="segment-card" id="seg-4">
-          <div class="segment-header">
-            <div class="segment-title">Phần 4: Lab 01-04 (Process Injection, Tắt WFP & Trojan Dropper)</div>
-            <span class="segment-time-badge">07:30 - 10:30 (180 giây)</span>
-          </div>
-
-          <div class="screen-action-box">
-            <div class="screen-action-title">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-              Thao tác trên màn hình (Screen Actions):
-            </div>
-            1. Mở <code>Lab01-04.exe</code> trong IDA tại <code>_main</code> (<code>0x00401350</code>), chỉ ra các API PSAPI nạp động.<br>
-            2. Mở hàm <code>sub_401174</code>: làm nổi bật <code>SeDebugPrivilege</code>, <code>sfc_os.dll</code> Ordinal #2 và lệnh <code>CreateRemoteThread</code>.<br>
-            3. Mở Resource section, chỉ ra binary nhúng #101 và hàm trích xuất <code>FindResourceA</code>.<br>
-            4. Mở mã Decompiler của Resource #101: trỏ vào lệnh gọi <code>URLDownloadToFileA</code> tải từ <code>practicalmalwareanalysis.com/updater.exe</code>.
-          </div>
-
-          <div class="teleprompter-script">
-            <p>"Cuối cùng là bài lab phức tạp nhất trong Chapter 1: <strong>Lab 01-04</strong>. Đây là một mẫu mã độc tinh vi tích hợp chuỗi tấn công đa giai đoạn gồm leo thang đặc quyền, can thiệp tiến trình hệ thống, tắt cơ chế bảo vệ của Windows và thả trojan thế chỗ."</p>
-            <p>"Đầu tiên, tại hàm <code>_main</code>, mã độc nạp động thư viện <code>psapi.dll</code> để quét danh sách các tiến trình đang hoạt động, lọc tìm PID của tiến trình hệ thống trọng yếu mang tên <mark>winlogon.exe</mark>."</p>
-            <p>"Để có thể can thiệp vào một tiến trình hệ thống cấp cao, hàm <code>sub_4010FC</code> sử dụng <code>AdjustTokenPrivileges</code> để kích hoạt đặc quyền <mark>SeDebugPrivilege</mark>. Sau khi đã có đủ quyền, mã độc nạp thư viện <code>sfc_os.dll</code> và lấy địa chỉ hàm xuất không tên mang số thứ tự <mark>Ordinal #2</mark> - chính là hàm <code>SfcTerminateWatcherThread</code>."</p>
-            <p>"Tiếp theo, nó gọi <code>CreateRemoteThread</code> để tiêm luồng thực thi vào trong không gian nhớ của <code>winlogon.exe</code>, chính thức vô hiệu hóa cơ chế bảo vệ tệp hệ thống <strong>Windows File Protection (WFP)</strong>."</p>
-            <p>"Khi WFP đã bị vô hiệu hóa, mã độc di chuyển file Windows Update hợp pháp <code>wupdmgr.exe</code> sang thư mục Temp với tên <code>winup.exe</code>. Sau đó, nó gọi <code>FindResourceA</code> và <code>LoadResource</code> để trích xuất một tệp nhị phân nhúng sẵn trong section Resource mang định danh <mark>#101</mark>, ghi đè trực tiếp thế chỗ vào <code>C:\windows\system32\wupdmgr.exe</code> và kích hoạt."</p>
-            <p>"Khi Resource #101 chạy lên, nó thực hiện hai việc cùng lúc: vừa kích hoạt file gốc <code>winup.exe</code> trong thư mục Temp để người dùng nhìn thấy cửa sổ cập nhật bình thường không nghi ngờ, vừa âm thầm gọi <code>URLDownloadToFileA</code> kết nối tới đường dẫn <mark>http://www.practicalmalwareanalysis.com/updater.exe</mark>, tải payload giai đoạn 2 về lưu thành <code>wupdmgrd.exe</code> và chạy ngầm."</p>
-          </div>
-        </div>
-
-        <!-- Segment 5 -->
-        <div class="segment-card" id="seg-5">
-          <div class="segment-header">
-            <div class="segment-title">Phần 5: Tổng Kết & Giới Thiệu Ứng Dụng SPA</div>
-            <span class="segment-time-badge">10:30 - 11:30 (60 giây)</span>
-          </div>
-
-          <div class="screen-action-box">
-            <div class="screen-action-title">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-              Thao tác trên màn hình (Screen Actions):
-            </div>
-            1. Chuyển sang trình duyệt hiển thị Dashboard SPA đang chạy.<br>
-            2. Lướt qua các Tab: Tổng Quan, Deep Dive (Lab 1-4), Bảng IOCs và Ma trận MITRE ATT&CK.<br>
-            3. Nhấp thử nút "Sao Chép Tất Cả IOCs" để minh họa tính năng tương tác.
-          </div>
-
-          <div class="teleprompter-script">
-            <p>"Tổng kết lại qua 4 bài lab của Chapter 1: chúng ta đã nắm bắt trọn vẹn các kỹ thuật cốt lõi của mã độc: từ <strong>Duy Trì (Persistence)</strong> qua DLL Hijacking và Windows Service; <strong>Lẩn Tránh (Defense Evasion)</strong> qua UPX, FSG và kỹ thuật tắt WFP; <strong>Leo Thang Đặc Quyền (Privilege Escalation)</strong> với Token Privileges; cho đến <strong>Điều Khiển C2</strong> qua HTTP và Socket Beaconing."</p>
-            <p>"Toàn bộ kiến trúc, đồ thị phụ thuộc hàm, mã giả Hex-Rays và 22 chỉ số nhận diện IOCs đã được em tích hợp trọn vẹn vào ứng dụng <strong>Executive Reverse Engineering SPA Dashboard</strong> này, được triển khai trực tiếp trên nền tảng đám mây Vercel với đầy đủ tính năng tương tác, ma trận MITRE ATT&CK và khả năng sao chép IOCs một chạm."</p>
-            <p>"Em xin chân thành cảm ơn Thầy và các bạn đã theo dõi bài báo cáo!"</p>
-          </div>
-        </div>
-
       </div>
     </section>
 

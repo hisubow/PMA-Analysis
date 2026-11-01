@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initSubTabs();
   initSearchAndFilters();
-  initStopwatch();
   initCodeCopyButtons();
 });
 
@@ -244,100 +243,5 @@ function initCodeCopyButtons() {
         copyToClipboard(targetCode.innerText, 'Đã sao chép mã nguồn vào Clipboard!');
       }
     });
-  });
-}
-
-/* ==========================================================================
-   5. PRESENTATION STUDIO STOPWATCH / TELEPROMPTER CONTROLLER
-   ========================================================================== */
-let stopwatchInterval = null;
-let stopwatchSeconds = 0;
-let isStopwatchRunning = false;
-
-function initStopwatch() {
-  const startBtn = document.getElementById('sw-start-btn');
-  const resetBtn = document.getElementById('sw-reset-btn');
-
-  if (startBtn) {
-    startBtn.addEventListener('click', toggleStopwatch);
-  }
-  if (resetBtn) {
-    resetBtn.addEventListener('click', resetStopwatch);
-  }
-}
-
-function toggleStopwatch() {
-  const startBtn = document.getElementById('sw-start-btn');
-  if (!startBtn) return;
-
-  if (isStopwatchRunning) {
-    // Pause
-    clearInterval(stopwatchInterval);
-    isStopwatchRunning = false;
-    startBtn.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-      Tiếp Tục
-    `;
-    startBtn.className = 'btn btn-primary';
-  } else {
-    // Start
-    isStopwatchRunning = true;
-    startBtn.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
-      Tạm Dừng
-    `;
-    startBtn.className = 'btn btn-secondary';
-
-    stopwatchInterval = setInterval(() => {
-      stopwatchSeconds++;
-      updateStopwatchDisplay();
-      highlightActiveSegment(stopwatchSeconds);
-    }, 1000);
-  }
-}
-
-function resetStopwatch() {
-  clearInterval(stopwatchInterval);
-  stopwatchSeconds = 0;
-  isStopwatchRunning = false;
-  updateStopwatchDisplay();
-  highlightActiveSegment(0);
-
-  const startBtn = document.getElementById('sw-start-btn');
-  if (startBtn) {
-    startBtn.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-      Bắt Đầu Quay
-    `;
-    startBtn.className = 'btn btn-primary';
-  }
-}
-
-function updateStopwatchDisplay() {
-  const display = document.getElementById('stopwatch-timer');
-  if (!display) return;
-  const mins = Math.floor(stopwatchSeconds / 60).toString().padStart(2, '0');
-  const secs = (stopwatchSeconds % 60).toString().padStart(2, '0');
-  display.innerText = `${mins}:${secs}`;
-}
-
-function highlightActiveSegment(seconds) {
-  // Define segment thresholds in seconds
-  // Segment 1: 0 - 150 (00:00 - 02:30)
-  // Segment 2: 150 - 300 (02:30 - 05:00)
-  // Segment 3: 300 - 450 (05:00 - 07:30)
-  // Segment 4: 450 - 630 (07:30 - 10:30)
-  // Segment 5: 630+ (10:30 - 11:30)
-
-  let activeIndex = 0;
-  if (seconds >= 0 && seconds < 150) activeIndex = 1;
-  else if (seconds >= 150 && seconds < 300) activeIndex = 2;
-  else if (seconds >= 300 && seconds < 450) activeIndex = 3;
-  else if (seconds >= 450 && seconds < 630) activeIndex = 4;
-  else if (seconds >= 630) activeIndex = 5;
-
-  document.querySelectorAll('.segment-card').forEach((card, idx) => {
-    const isCurrent = (idx + 1) === activeIndex;
-    card.classList.toggle('active-segment', isCurrent);
   });
 }
